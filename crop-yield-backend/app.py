@@ -3,7 +3,7 @@ from flask_cors import CORS
 import joblib
 import pandas as pd
 import os
-import gdown
+
 # ----------------------------
 # Flask App Configuration
 # ----------------------------
@@ -13,30 +13,23 @@ CORS(app)
 # ----------------------------
 # Load Model & Encoders
 # ----------------------------
-MODEL_URL = "https://drive.google.com/uc?export=download&id=1bianH9FTUVGp_5nwX9Tl7QP6xDxlv2kE"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, "model")
 
-MODEL_DIR = os.path.join(os.path.dirname(__file__), "model")
-MODEL_FILE = os.path.join(MODEL_DIR, "crop_yield_prediction.pkl")
-
-# Create model directory if it doesn't exist
-os.makedirs(MODEL_DIR, exist_ok=True)
-
-# Download only if model doesn't exist
-if not os.path.exists(MODEL_FILE):
-    print("Downloading model...")
-    gdown.download(id="1bianH9FTUVGp_5nwX9Tl7QP6xDxlv2kE", output=MODEL_FILE, quiet=False)
+MODEL_PATH = os.path.join(MODEL_DIR, "crop_yield_prediction.pkl")
+AREA_ENCODER_PATH = os.path.join(MODEL_DIR, "area_encoder.pkl")
+ITEM_ENCODER_PATH = os.path.join(MODEL_DIR, "item_encoder.pkl")
 
 try:
-    model = joblib.load(MODEL_FILE)
-    area_encoder = joblib.load(os.path.join(MODEL_DIR, "area_encoder.pkl"))
-    item_encoder = joblib.load(os.path.join(MODEL_DIR, "item_encoder.pkl"))
+    model = joblib.load(MODEL_PATH)
+    area_encoder = joblib.load(AREA_ENCODER_PATH)
+    item_encoder = joblib.load(ITEM_ENCODER_PATH)
 
     print("Model and encoders loaded successfully.")
 
 except Exception as e:
     print(f"Error loading model: {e}")
     raise
-
 
 # ----------------------------
 # Home Route
@@ -47,7 +40,6 @@ def home():
         "status": "Backend Running",
         "model": "Loaded Successfully"
     })
-
 
 # ----------------------------
 # Prediction Route
@@ -113,10 +105,13 @@ def predict():
             "error": str(e)
         }), 500
 
-
 # ----------------------------
 # Run Server
 # ----------------------------
 if __name__ == "__main__":
     print("Starting Flask Server...")
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5000)),
+        debug=False
+    )
