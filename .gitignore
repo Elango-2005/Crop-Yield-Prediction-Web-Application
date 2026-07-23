@@ -68,5 +68,3 @@ coverage/
 # =========================
 *.tmp
 *.temp
-
-crop-yield-backend/model/crop_yield_prediction.pkl
