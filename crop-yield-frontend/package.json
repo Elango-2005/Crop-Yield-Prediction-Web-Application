@@ -4,12 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "frontend": "vite",
-    "backend": "cd ../crop-yield-backend && venv\\Scripts\\python.exe app.py",
-    "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
+    "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.12",

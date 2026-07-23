@@ -114,7 +114,7 @@ export default function Home() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/predict",
+        "https://ai-powered-crop-yield-prediction.onrender.com/predict",
         payload
       );
 
